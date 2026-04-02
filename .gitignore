@@ -60,6 +60,6 @@ ipch/
 # =========================
 # (선택) 프로젝트 파일 제외하고 싶을 때
 # =========================
-# *.sln
-# *.vcxproj
-# *.vcxproj.filters
+*.sln
+*.vcxproj
+*.vcxproj.filters
