@@ -63,3 +63,4 @@ ipch/
 *.sln
 *.vcxproj
 *.vcxproj.filters
+*.slnx
