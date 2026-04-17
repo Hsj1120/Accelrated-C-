@@ -17,4 +17,6 @@ bool compare(const Student_info&, const Student_info&);
 std::istream& read(std::istream& is, Student_info& s);
 std::istream& read_hw(std::istream& in, std::vector<double>& hw);
 bool did_all_hw(const Student_info& s);
+bool fgrade(const Student_info& s);
+bool pgrade(const Student_info& s);
 #endif
