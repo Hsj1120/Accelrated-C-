@@ -5,6 +5,12 @@
 using std::string; using std::map;
 using std::cin; using std::cout; using std::endl;
 using std::vector; using std::istream;
+using std::logic_error;
+
+typedef vector<string> Rule;
+typedef vector<Rule> Rule_collection;
+typedef map<string, Rule_collection> Grammar;
+
 
 // 인수가 공백일 때는 true, 그렇지 않을 때는 false를 반환하는 함수
 bool space(char c)
@@ -60,27 +66,68 @@ vector<string> find_words(const string&) = split)
 	return ret;
 }
 
+// 주어진 입력 스트림으로 문법 테이블을 읽음
+Grammar read_grammar(istream& in)
+{
+	Grammar ret;
+	string line;
+
+	// 입력한 행을 모두 읽음
+	while (getline(in, line)) {
+		// 입력 데이터를 단어로 나눔
+		vector<string> entry = split(line);
+		if (!entry.empty())
+			// 카테고리 및 연관된 규칙을 맵에 저장
+			ret[entry[0]].push_back(Rule(entry.begin() + 1, entry.end()));
+	}
+	return ret;
+}
+
+bool bracketed(const string& s)
+{
+	return s.size() > 1 && s[0] == '<' && s[s.size() - 1] == '>';
+}
+
+void gen_aux(const Grammar& g, const string& word, vector<string>& ret)
+{
+	if (!bracketed(word)) {
+		ret.push_back(word);
+	} else {
+		Grammar::const_iterator it = g.find(word);
+		if (it == g.end())
+			throw logic_error("empty rule");
+		const Rule_collection& c = it->second;
+		const Rule& r = c[nrand(c.size())];
+		for (Rule::const_iterator i = r.begin(); i != r.end(); ++i)
+			gen_aux(g, *i, ret);
+	}
+}
+
+vector<string> gen_sentence(const Grammar& g)
+{
+	vector<string> ret;
+	gen_aux(g, "<sentence>", ret);
+	return ret;
+}
+
 int main()
 {
-	map<string, vector<int> > ret = xref(cin);
+	// 문장 생성
+	vector <string> sentence = gen_sentence(read_grammar(cin));
 
-	// 결과 출력
-	for (map <string, vector<int> >::const_iterator it = ret.begin(); it != ret.end(); ++it) {
-		// 단어를출력
-		cout << it->first << " occurs on line(s): ";
-
-		// 이어서 하나 이상의 행 번호를 출력
-		vector<int>::const_iterator line_it = it->second.begin();
-		cout << *line_it;
-		++line_it;
-
-		// 행 번호가 있으면 마저 출력
-		while(line_it != it->second.end()) {
-			cout << ", " << *line_it;
-			++line_it;
-		}
-
-		cout << endl;
+	// 첫번째 단어 출력
+	vector<string>::const_iterator it = sentence.begin();
+	if (!sentence.empty()) {
+		cout << *it;
+		++it;
 	}
+
+	// 공백과 함께 나머지 단어 출력
+	while (it != sentence.end()) {
+		cout << " " << *it;
+		++it;
+	}
+	cout << endl;
+
 	return 0;
 }
