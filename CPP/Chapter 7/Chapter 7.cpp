@@ -2,6 +2,8 @@
 #include <string>
 #include <map>
 #include <vector>
+#include <cstdlib>
+
 using std::string; using std::map;
 using std::cin; using std::cout; using std::endl;
 using std::vector; using std::istream;
@@ -86,6 +88,20 @@ Grammar read_grammar(istream& in)
 bool bracketed(const string& s)
 {
 	return s.size() > 1 && s[0] == '<' && s[s.size() - 1] == '>';
+}
+
+int nrand(int n)
+{
+	if (n <= 0 || n > RAND_MAX)
+		throw logic_error("argument to nrand is out of range");
+
+	const int bucket_size = RAND_MAX / n;
+	int r;
+
+	do r = rand() / bucket_size;
+	while (r >= n);
+
+	return r; 
 }
 
 void gen_aux(const Grammar& g, const string& word, vector<string>& ret)
