@@ -3,16 +3,9 @@
 
 using std::vector; using std::istream;
 
-bool compare(const Student_info& x, const Student_info& y)
+bool compare(const Student_info& x,	const Student_info& y)
 {
-	return x.name < y.name;
-}
-
-istream& read(istream& is, Student_info& s)
-{
-	is >> s.name >> s.midterm >> s.final;
-	read_hw(is, s.homework);
-	return is;
+	return x.name() < y.name();
 }
 
 istream& read_hw(istream& in, vector<double>& hw)
@@ -31,7 +24,10 @@ istream& read_hw(istream& in, vector<double>& hw)
 
 istream& Student_info::read(istream& is)
 {
-	is >> name >> midterm >> final;
+	is >> n >> midterm >> final;
 	read_hw(is, homework);
 	return is;
 }
+
+Student_info::Student_info() : midterm(0), final(0) {}
+Student_info::Student_info(std::istream& is) { read(is); }
