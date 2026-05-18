@@ -1,6 +1,9 @@
 ﻿#include <iostream>
 #include <string>
+#include <fstream>
 using std::cout; using std::endl; using std::string;
+using std::ifstream; using std::ofstream; using std::cerr;
+using std::getline;
 
 string letter_grade(double grade)
 {
@@ -23,12 +26,24 @@ string letter_grade(double grade)
 
 int main(int argc, char** argv)
 {
-	// 명령 프롬프트에 입력한 인수가 존재하면 출력
-	if (argc > 1) {
-		int i;
-		for (i = 1; i < argc-1; ++i)
-			cout << argv[i] << " ";
-		cout << argv[i] << endl;
+	int fail_count = 0;
+
+	// 주어진 각 파일에 동작을 실행
+	for (int i = 1; i < argc; ++i) {
+		ifstream in(argv[i]);
+
+		// 파일이 존재하면 해당 파일의 내용을 출력하고
+		// 그렇지 않으면 오류 메시지를 출력
+		if (in) {
+			string s;
+			while (getline(in, s)) {
+				cout << s << endl;
+			}
+		}
+		else {
+			cerr << "파일 " << argv[i] << "을(를) 열 수 없습니다." << endl;
+			++fail_count;
+		}
 	}
-	return 0;
+	return fail_count;
 }
