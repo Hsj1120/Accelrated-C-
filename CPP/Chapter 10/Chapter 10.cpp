@@ -24,8 +24,26 @@ string letter_grade(double grade)
 	return "?\?\?";
 }
 
+int* valid_pointer()
+{
+	int x;
+	return &x; // 위험! 지역 변수의 주소를 반환
+}
+
+int* pointer_to_static()
+{
+	static int x;
+	return &x;
+}
+
+int* pointer_to_dynamic()
+{
+	return new int(0); // 동적 할당된 메모리의 주소를 반환
+}
+
 int main(int argc, char** argv)
 {
+	int* p = new int(42);
 	int fail_count = 0;
 
 	// 주어진 각 파일에 동작을 실행
